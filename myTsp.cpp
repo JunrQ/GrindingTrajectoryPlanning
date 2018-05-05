@@ -4,3 +4,11 @@
 
 #include "myTsp.hpp"
 
+void mexFunction(int nlhs, mxArray* plhsp[], int nrhs, const mxArray* prhs[]) {
+    
+}
+
+float* getDistanceMatrix(const float* pointsCloud) {
+    if()
+}
+
