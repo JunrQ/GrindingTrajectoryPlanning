@@ -1,0 +1,15 @@
+/Applications/CLion.app/Contents/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/junr/Documents/Works/graduation-project/code/face_traj
+-- Configuring done
+CMake Error at CMakeLists.txt:6 (add_executable):
+  Cannot find source file:
+
+    src/myTsp.cpp
+
+  Tried extensions .c .C .c++ .cc .cpp .cxx .m .M .mm .h .hh .h++ .hm .hpp
+  .hxx .in .txx
+
+
+CMake Error: CMake can not determine linker language for target: face_traj
+CMake Error: Cannot determine link language for target "face_traj".
+-- Generating done
+-- Build files have been written to: /Users/junr/Documents/Works/graduation-project/code/face_traj/cmake-build-debug
