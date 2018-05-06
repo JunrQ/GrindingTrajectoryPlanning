@@ -19,4 +19,9 @@ void mexFunction(int nlhs, mxArray* plhsp[], int nrhs, const mxArray* prhs[]);
  */
 float* getDistanceMatrix(float* pointsCloud);
 
+/**
+ * @brief TSP problem solver, use GA(genetic algorithm).
+ */
+void myTspSolver_GA(double* input, double* output, int num);
+
 #endif //FACE_TRAJ_MYTSP_HPP

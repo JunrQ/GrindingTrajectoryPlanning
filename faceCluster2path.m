@@ -18,6 +18,7 @@ for i=1:length(faces_idx)
     current_face = faces_coor_idx(i, :);
     % use interp1 in face
     
+
 end
 
 % order the points
