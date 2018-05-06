@@ -5,7 +5,9 @@
 #include "myTsp.hpp"
 
 void mexFunction(int nlhs, mxArray* plhsp[], int nrhs, const mxArray* prhs[]) {
-    
+    if(nrhs != 1) {
+        mexPrintf
+    }
 }
 
 float* getDistanceMatrix(const float* pointsCloud) {

@@ -13,3 +13,9 @@ The following code will return `robot` as robot arm model.
 Divide into small faces will need less memory space, but also make the path
 not global-optimal. So, the path will be generated according to different
 faces.
+```shell
+clusters = divideIntoFaces(v, f ,n);
+```
+
+### 3.2 For each face cluster generate path
+
