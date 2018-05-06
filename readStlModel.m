@@ -10,9 +10,9 @@
 % **Note:** see stlRead for detail.
 
 function [v, f, n] = readStlModel(path, func, varargin)
-assert(exists(path), "ERROR: File %s don't exists", path);
-if nargin < 2:
-    func = preprocessStlVFN;
+assert(exist(path)>0, "ERROR: File %s don't exists", path);
+if nargin < 2
+    func = @preprocessStlVFN;
 end
 [v, f, n, name] = stlRead(path);
 [v, f, n] = func(v, f, n);
