@@ -31,6 +31,6 @@ void mexFunction(int nlhs, mxArray* plhsp[],
 
 }
 
-void myTspSolver_GA(double* input, double* output, int num) {
+void mySolver_GA(double* input, double* output, int num) {
 
 }
