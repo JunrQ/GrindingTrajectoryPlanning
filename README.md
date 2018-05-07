@@ -1,4 +1,5 @@
 # 
+All the code should be run under matlab console.
 
 ## 1. Get the target from \*.stl
 Run the following scripts, this will return v, f, n.
@@ -8,7 +9,7 @@ Run the following scripts, this will return v, f, n.
 The following code will return `robot` as robot arm model.
 `robot, q0, speed_limit, qlimit = getRobotModel();`
 
-## 3. Get the path
+## 3. Planning: get the path
 ### 3.1 Divide the whole stl model into individual faces
 Divide into small faces will need less memory space, but also make the path
 not global-optimal. So, the path will be generated according to different
@@ -20,3 +21,6 @@ clusters = divideIntoFaces(v, f ,n);
 ### 3.2 For each face cluster generate path
 `path = generatePath(clusters, v, f, n);`
 
+## 4. Planning: get the pose along the path
+### 4.1 Add pose path
+`addpath ./pose/`
