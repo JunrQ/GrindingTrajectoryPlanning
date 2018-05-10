@@ -9,4 +9,6 @@ void mexFunction(int nlhs, mxArray* plhs[],
     mexPrintf("%f\n", i[1]);
     mexPrintf("%f\n", i[2]);
     mexPrintf("%f\n", i[3]);
+    mexPrintf("%f\n", i[4]);
+    mexPrintf("%f\n", i[5]);
 }

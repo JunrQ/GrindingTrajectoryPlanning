@@ -8,6 +8,6 @@ if argin < 5
 end
 [~, cluster_num] = size(clusters);
 for cluIdx=1:cluster
-    [pointsCloud, pointsCloudFaceIdx] = generatePointsCloud(clusters{1, cluIdx}, v, f, n, gap);
+    [pointsCloud, pointsCloudFaceIdx] = generatePointsCloud(clusters{cluIdx}, v, f, n, gap);
 end
 end

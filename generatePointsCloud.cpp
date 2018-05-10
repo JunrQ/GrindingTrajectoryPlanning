@@ -33,9 +33,9 @@ void mexFunction(int nlhs, mxArray* plhs[],
     size_t m;
 
     /* Get the input to double[]. */
-    double *faceIdx;
+    int *faceIdx;
     int face_num;
-    faceIdx = mxGetPr(prhs[0]); /* Pointer to first input matrix. */
+    faceIdx = (int*)mxGetData(prhs[0]); /* Pointer to first input matrix. */
     face_num = mxGetN(prhs[0]); /* Number of rows. */
 
     double *v;
@@ -54,15 +54,16 @@ void mexFunction(int nlhs, mxArray* plhs[],
     int faceIdxInfo[face_num];
     vector<vector<double> > pointsCloudIdx;
     for (int i=0; i<face_num; i++) {
-        faceIdxInfo[i] = (int)faceIdx[i];
+        faceIdxInfo[i] = faceIdx[i];
         vector<double> tmpPointsCloud;
-        int p1 = f[(int)faceIdx[i]];
-        int p2 = f[(int)faceIdx[i]+face_num];
-        int p3 = f[(int)faceIdx[i]+2*face_num];
-        // mexPrintf("%f, %f, %f\n%f, %f, %f\n%f, %f, %f\n", 
-        //                              v[p1], v[p1+vertices], v[p1+2*vertices],
-        //                              v[p2], v[p2+vertices], v[p2+2*vertices],
-        //                              v[p3], v[p3+vertices], v[p3+2*vertices]);
+        int p1 = f[faceIdx[i]];
+        int p2 = f[faceIdx[i]+face_num];
+        int p3 = f[faceIdx[i]+2*face_num];
+        mexPrintf("%d %d %d\n", p1, p2, p3);
+        mexPrintf("%f, %f, %f\n%f, %f, %f\n%f, %f, %f\n", 
+                                     v[p1], v[p1+vertices], v[p1+2*vertices],
+                                     v[p2], v[p2+vertices], v[p2+2*vertices],
+                                     v[p3], v[p3+vertices], v[p3+2*vertices]);
         double threeFacePoints[9] = {v[p1], v[p1+vertices], v[p1+2*vertices],
                                      v[p2], v[p2+vertices], v[p2+2*vertices],
                                      v[p3], v[p3+vertices], v[p3+2*vertices]};
@@ -84,8 +85,10 @@ void mexFunction(int nlhs, mxArray* plhs[],
     int curCount = 0;
     for (int i=0; i<face_num; i++) {
         tmpPointsCloud = pointsCloudIdx[i];
-        for (int j=0; j<tmpPointsCloud.size(); j++) {
+        for (int j=0; j<tmpPointsCloud.size() / 3; j++) {
             pointsCloud[curCount] = tmpPointsCloud[j];
+            pointsCloud[curCount+pointNum] = tmpPointsCloud[j+1];
+            pointsCloud[curCount+2*pointNum] = tmpPointsCloud[j+2];
             pointsCloudFaceIdx[curCount] = faceIdxInfo[i];
             curCount++;
         }
@@ -124,6 +127,7 @@ void _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCl
                        threeFacePoints[0],
                        threeFacePoints[1],
                        threeFacePoints[2]);
+    mexPrintf("%f %f %f\n", length[0], length[1], length[2]);
     int maxIdx = 0;
     double maxVal = 0;
     for (int i=0; i<3; i++) {
