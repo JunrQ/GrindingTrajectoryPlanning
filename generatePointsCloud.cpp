@@ -4,9 +4,15 @@
 
 #include "mex.h"
 #include <vector>
-#include <math>
+#include <math.h>
 
 using std::vector;
+
+void _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCloud);
+
+inline double _norm2(double x1, double y1, double z1, double x2, double y2, double z2) {
+    return sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1)+(z2-z1)*(z2-z1));
+}
 
 /**
  * @brief Demanded by mex scripts.
@@ -14,15 +20,15 @@ using std::vector;
  * @author JunrZhou
  * @date 2018-5-7
  */
-void mexFunction(int nlhs, mxArray* plhsp[], 
+void mexFunction(int nlhs, mxArray* plhs[], 
                  int nrhs, const mxArray* prhs[]) {
     // input check
-    if(nrhs != 6)
+    if(nrhs != 5)
         mexErrMsgIdAndTxt( "MATLAB:convec:invalidNumInputs",
-                "Exactly four input (faces_idx, v, f, n, number_adjoint, adjoint_length) required.");
-    if(nlhs != 3)
+                "Exactly four input (faces_idx, v, f, n, gap) required.");
+    if(nlhs != 2)
         mexErrMsgIdAndTxt( "MATLAB:convec:invalidNumOutputs",
-                "Exactly three (pointsCloud, pointsCloudFaceIdx, pointsCloudAdjPointsIdx) output required.");
+                "Exactly three (pointsCloud, pointsCloudFaceIdx) output required.");
     
     size_t m;
 
@@ -30,39 +36,60 @@ void mexFunction(int nlhs, mxArray* plhsp[],
     double *faceIdx;
     int face_num;
     faceIdx = mxGetPr(prhs[0]); /* Pointer to first input matrix. */
-    face_num = mxGetM(prhs[0]); /* Number of rows. */
+    face_num = mxGetN(prhs[0]); /* Number of rows. */
 
     double *v;
     v = mxGetPr(prhs[1]);
+    int vertices = mxGetM(prhs[1]);
     double *f;
     f = mxGetPr(prhs[2]);
     double *n;
     n = mxGetPr(prhs[3]);
-    int *number_adjoint;
-    number_adjoint = mxGetPr(prhs[4]);
-    double *adjoint_length;
-    adjoint_length = mxGetPr(prhs[5]);
-
-    /* Get the output to double[]. */
-    double *pointsCloud;
-    plhs[0] = mxCreateDoubleMatrix((mwSize)m, (mwSize)3, mxREAL);
-    pointsCloud = mxGetPr(plhs[0]); // get the pointer
-
-    double *pointsCloudFaceIdx;
-    plhs[1] = mxCreateDoubleMatrix((mwSize)m, (mwSize)1, mxREAL);
-    pointsCloudFaceIdx = mxGetPr(plhs[1]);
-
-    double *pointsCloudFaceIdx;
-    plhs[1] = mxCreateDoubleMatrix((mwSize)m, (mwSize)1, mxREAL);
-    pointsCloudFaceIdx = mxGetPr(plhs[1]);
+    double *gapPointer;
+    gapPointer = mxGetPr(prhs[4]);
+    int gap = *gapPointer;
 
     // call the C/C++ subroutine.
-    
-    for ()
+    int pointNum = 0;
+    int faceIdxInfo[face_num];
+    vector<vector<double> > pointsCloudIdx;
+    for (int i=0; i<face_num; i++) {
+        faceIdxInfo[i] = (int)faceIdx[i];
+        vector<double> tmpPointsCloud;
+        int p1 = f[(int)faceIdx[i]];
+        int p2 = f[(int)faceIdx[i]+face_num];
+        int p3 = f[(int)faceIdx[i]+2*face_num];
+        // mexPrintf("%f, %f, %f\n%f, %f, %f\n%f, %f, %f\n", 
+        //                              v[p1], v[p1+vertices], v[p1+2*vertices],
+        //                              v[p2], v[p2+vertices], v[p2+2*vertices],
+        //                              v[p3], v[p3+vertices], v[p3+2*vertices]);
+        double threeFacePoints[9] = {v[p1], v[p1+vertices], v[p1+2*vertices],
+                                     v[p2], v[p2+vertices], v[p2+2*vertices],
+                                     v[p3], v[p3+vertices], v[p3+2*vertices]};
+        _faceToPoints(threeFacePoints, gap, tmpPointsCloud);
+        pointNum += tmpPointsCloud.size();
+        pointsCloudIdx.push_back(tmpPointsCloud);
+    }
 
+    /* Get the output to double[]. */
+    double* pointsCloud;
+    plhs[0] = mxCreateDoubleMatrix((mwSize)pointNum, (mwSize)3, mxREAL);
+    pointsCloud = mxGetPr(plhs[0]); // get the pointer
 
-    
+    double* pointsCloudFaceIdx;
+    plhs[1] = mxCreateDoubleMatrix((mwSize)pointNum, (mwSize)1, mxREAL);
+    pointsCloudFaceIdx = mxGetPr(plhs[1]);
 
+    vector<double> tmpPointsCloud;
+    int curCount = 0;
+    for (int i=0; i<face_num; i++) {
+        tmpPointsCloud = pointsCloudIdx[i];
+        for (int j=0; j<tmpPointsCloud.size(); j++) {
+            pointsCloud[curCount] = tmpPointsCloud[j];
+            pointsCloudFaceIdx[curCount] = faceIdxInfo[i];
+            curCount++;
+        }
+    }
 }
 
 /**
@@ -72,26 +99,26 @@ void mexFunction(int nlhs, mxArray* plhsp[],
  * 
  * @params threeFacePoints, six numbers
  * @params gap
- * @return 
+ * @params pointsCloud
  * @author JunrZhou
  * @date 2018-5-8
  */
-double* _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCloud) {
+void _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCloud) {
     /* Find the longest line. */
-    double* length = new double[3];
-    double length[0] = _norm2(threeFacePoints[0],
+    double length[3];
+    length[0] = _norm2(threeFacePoints[0],
                        threeFacePoints[1],
                        threeFacePoints[2],
                        threeFacePoints[3],
                        threeFacePoints[4],
                        threeFacePoints[5]);
-    double length[1] = _norm2(threeFacePoints[3],
+    length[1] = _norm2(threeFacePoints[3],
                        threeFacePoints[4],
                        threeFacePoints[5],
                        threeFacePoints[6],
                        threeFacePoints[7],
                        threeFacePoints[8]);
-    double length[2] = _norm2(threeFacePoints[6],
+    length[2] = _norm2(threeFacePoints[6],
                        threeFacePoints[7],
                        threeFacePoints[8],
                        threeFacePoints[0],
@@ -131,7 +158,6 @@ double* _faceToPoints(double *threeFacePoints, double gap, vector<double>& point
     double thirdDeltaY = (threeFacePoints[peakPointIdx1 + 1] - thirdPointY) / thirdLength * gap;
     double thirdDeltaZ = (threeFacePoints[peakPointIdx1 + 2] - thirdPointZ) / thirdLength * gap;
 
-    double 
     for(int i=0; i<fragmentNum; i++) {
         int startPointX = peakPointX + i * peakDeltaX;
         int startPointY = peakPointY + i * peakDeltaY;
@@ -163,8 +189,4 @@ double* _faceToPoints(double *threeFacePoints, double gap, vector<double>& point
     pointsCloud.push_back(threeFacePoints[peakPointIdx1]);
     pointsCloud.push_back(threeFacePoints[peakPointIdx1+1]);
     pointsCloud.push_back(threeFacePoints[peakPointIdx1+2]);
-}
-
-inline double _norm2(double x1, double y1, double z1, double x2, double y2, double z2) {
-    return sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1)+(z2-z1)*(z2-z1));
 }

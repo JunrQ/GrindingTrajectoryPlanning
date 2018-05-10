@@ -48,6 +48,8 @@ while 1
                         disjoint_set_array = elementsUnion(disjoint_set_array, i, j);
                         face_processed(j) = 1.0;
                         clusters{tmp_cls} = [clusters{tmp_cls}, j];
+                        % break, in case other face in the cluster is connected to j
+                        break;
                     end
                 end
             end

@@ -19,16 +19,18 @@ Divide into small faces will need less memory space, but also make the path
 not global-optimal. So, the path will be generated according to different
 faces.
 ```matlab
-clusters = divideIntoFaces(v, f ,n);
+clusters = divideIntoFaces(v, f ,n); // clusters have shape [1, #clusters]
 ```
 
 ### 3.2 For each face cluster generate path
 ```matlab
 // compile
 mex generatePointsCloud.cpp // -largeArrayDims // This make mxSize size_t
-
-
 path = generatePath(clusters, v, f, n);
+```
+The function generatePath will run following code:
+```matlab
+
 ```
 
 ## 4. Planning: get the pose along the path
