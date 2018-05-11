@@ -5,6 +5,14 @@
 #include "mex.h"
 #include <math.h>
 #include <float.h>
+#include <vector>
+
+inline bool checkDoubleEqual(const double x, const double y) {
+    if(x > y)
+        return (x-y)<1e-5;
+    else
+        return (y-x)<1e-5;
+}
 
 /**
  * @brief Get the distance matrix of points.
@@ -109,13 +117,8 @@ void mexFunction(int nlhs, mxArray* plhs[],
     distanceMatrix(pointsCloud, distMat, pointsNum);
 
     // point to first output
-    double* orderedPointsCloud;
-    plhs[0] = mxCreateDoubleMatrix((mwSize)pointsNum, (mwSize)3, mxREAL);
-    orderedPointsCloud = mxGetPr(plhs[0]); // get the pointer
-
-    double* orderedPointsCloudIdx;
-    plhs[1] = mxCreateDoubleMatrix((mwSize)pointsNum, (mwSize)1, mxREAL);
-    orderedPointsCloudIdx = mxGetPr(plhs[1]);
+    double* orderedPointsCloud = new double[pointsNum * 3];
+    double* orderedPointsCloudIdx = new double[pointsNum];
 
     // call the C/C++ subroutine.
     switch(method) {
@@ -132,6 +135,52 @@ void mexFunction(int nlhs, mxArray* plhs[],
         }
     }
     
+    /* Removal of repetition. */
+    std::vector<double> vecPointsCloud;
+    std::vector<double> vecPointsCloudIdx;
+    double lastX, lastY, lastZ, curX, curY, curZ;
+    lastX = orderedPointsCloud[0];
+    lastY = orderedPointsCloud[0 + pointsNum];
+    lastZ = orderedPointsCloud[0 + 2*pointsNum];
+    vecPointsCloud.push_back(lastX);
+    vecPointsCloud.push_back(lastY);
+    vecPointsCloud.push_back(lastZ);
+    vecPointsCloudIdx.push_back(orderedPointsCloudIdx[0]);
+    for(int i=1; i<pointsNum; i++) {
+        curX = orderedPointsCloud[i];
+        curY = orderedPointsCloud[i + pointsNum];
+        curZ = orderedPointsCloud[i + 2*pointsNum];
+        if(checkDoubleEqual(curX, lastX) && 
+           checkDoubleEqual(curY, lastY) && 
+           checkDoubleEqual(curZ, lastZ))
+           {continue;}
+        vecPointsCloud.push_back(curX);
+        vecPointsCloud.push_back(curY);
+        vecPointsCloud.push_back(curZ);
+        vecPointsCloudIdx.push_back(orderedPointsCloudIdx[i]);
+        lastX = curX;
+        lastY = curY;
+        lastZ = curZ;
+    }
+
+    /* Return. */
+    int returnLength = vecPointsCloudIdx.size();
+    double* rOrederedPointsCloud;
+    plhs[0] = mxCreateDoubleMatrix((mwSize)returnLength, (mwSize)3, mxREAL);
+    rOrederedPointsCloud = mxGetPr(plhs[0]); // get the pointer
+    double* rOrederedPointsCloudIdx;
+    plhs[1] = mxCreateDoubleMatrix((mwSize)returnLength, (mwSize)1, mxREAL);
+    rOrederedPointsCloudIdx = mxGetPr(plhs[1]); // get the pointer
+
+    for (int i=0; i<returnLength; i++) {
+        rOrederedPointsCloud[i] = vecPointsCloud[3*i];
+        rOrederedPointsCloud[i + returnLength] = vecPointsCloud[3*i + 1];
+        rOrederedPointsCloud[i + 2*returnLength] = vecPointsCloud[3*i + 2];
+        rOrederedPointsCloudIdx[i] = vecPointsCloudIdx[i];
+    }
+
+    delete [] orderedPointsCloud;
+    delete [] orderedPointsCloudIdx;
     delete [] distMat;
     return;
 }
@@ -174,10 +223,10 @@ void mySolverGreedy(const double* pointsCloud, const double* pointsCloudIdx,
         minIdx = tmpPointsIdx[minIdx];
         // mexPrintf("%d: %d\n", i, minIdx);
 
-        orderedPointsCloud[minIdx] = pointsCloud[minIdx];
-        orderedPointsCloud[minIdx+length] = pointsCloud[minIdx+length];
-        orderedPointsCloud[minIdx+2*length] = pointsCloud[minIdx+2*length];
-        orderedPointsCloudIdx[minIdx] = pointsCloudIdx[minIdx];
+        orderedPointsCloud[i] = pointsCloud[minIdx];
+        orderedPointsCloud[i+length] = pointsCloud[minIdx+length];
+        orderedPointsCloud[i+2*length] = pointsCloud[minIdx+2*length];
+        orderedPointsCloudIdx[i] = pointsCloudIdx[minIdx];
     }
 }
 
