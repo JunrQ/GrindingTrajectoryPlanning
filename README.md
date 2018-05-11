@@ -24,7 +24,7 @@ clusters = divideIntoFaces(v, f ,n); % clusters have shape [1, #clusters]
 
 ### 3.2 For each face cluster generate path
 ```matlab
-// compile
+% compile
 mex generatePointsCloud.cpp % -largeArrayDims % This make mxSize size_t
 mex myTraverser.cpp
 path = generatePath(clusters, v, f, n);
