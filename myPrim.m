@@ -1,7 +1,7 @@
 %MYPRIMFORLINES
 % prim for connect lines
 %
-function [reordered, r_norms] = myPrimForLines(lines, norms)
+function [reordered, r_norms] = myPrimForLines(lines)
 % chose a line randomly
 [m, n] = size(lines);
 
