@@ -85,13 +85,12 @@ void mexFunction(int nlhs, mxArray* plhs[],
 
     /* Get the input to double[] */
     double *pointsCloud;
-    int pointsNum3, pointsNum;
+    int pointsNum;
     pointsCloud = mxGetPr(prhs[0]); /* Pointer to first input matrix. */
-    pointsNum3 = mxGetM(prhs[0]); /* Number of rows. */
-    pointsNum = pointsNum3 / 3;
+    pointsNum = mxGetM(prhs[0]); /* Number of rows. */
 
     double *pointsCloudIdx;
-    if( mxGetM(prhs[1]) != pointsNum3 )
+    if( mxGetM(prhs[1]) != pointsNum )
         mexErrMsgIdAndTxt( "MATLAB:myTraverser:invalidInputsShape",
                 "pointsCloudIdx should have same number of rows as pointsCloud");
     pointsCloudIdx = mxGetPr(prhs[1]);
@@ -115,13 +114,14 @@ void mexFunction(int nlhs, mxArray* plhs[],
     orderedPointsCloud = mxGetPr(plhs[0]); // get the pointer
 
     double* orderedPointsCloudIdx;
-    plhs[0] = mxCreateDoubleMatrix((mwSize)pointsNum, (mwSize)1, mxREAL);
-    orderedPointsCloudIdx = mxGetPr(plhs[0]);
+    plhs[1] = mxCreateDoubleMatrix((mwSize)pointsNum, (mwSize)1, mxREAL);
+    orderedPointsCloudIdx = mxGetPr(plhs[1]);
 
     // call the C/C++ subroutine.
     switch(method) {
         case 0: {
             int* visited = new int[pointsNum]();
+            // mexPrintf("3\n");
             mySolverGreedy(pointsCloud, pointsCloudIdx,
                            orderedPointsCloud, orderedPointsCloudIdx,
                            distMat,
@@ -155,23 +155,24 @@ void mySolverGreedy(const double* pointsCloud, const double* pointsCloudIdx,
     orderedPointsCloudIdx[minIdx] = pointsCloudIdx[minIdx];
 
     double minVal = -1;
-    for(int i=0; i<length; i++) {
+    for(int i=0; i<length-1; i++) {
         visited[minIdx] = 1;
 
-        double tmpDist[length - i];
-        int tmpPointsIdx[length - i];
+        double tmpDist[length - i - 1];
+        int tmpPointsIdx[length - i - 1];
         int tmpCount = 0;
         for (int j=0; j<length; j++) {
             if(visited[j] == 0) {
                 tmpDist[tmpCount] = distanceMatrix[minIdx+j*length];
                 tmpPointsIdx[tmpCount] = j;
-                if(tmpCount == (length-i-1))break;
+                if(tmpCount == (length-i-2))break;
                 tmpCount++;
             }
         }
 
-        vecMin(tmpDist, length-i, minIdx, minVal);
+        vecMin(tmpDist, length-i-1, minIdx, minVal);
         minIdx = tmpPointsIdx[minIdx];
+        // mexPrintf("%d: %d\n", i, minIdx);
 
         orderedPointsCloud[minIdx] = pointsCloud[minIdx];
         orderedPointsCloud[minIdx+length] = pointsCloud[minIdx+length];
