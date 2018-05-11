@@ -1,11 +1,11 @@
 %GENERATEPATH generate path
 %
-% path = generatePathFromClusters(clusters, v, f, n), generate path
+% [pointsPath, pointsPathIdx] = generatePathFromClusters(clusters, v, f, n, gap, method), generate path
 % after clusters generated.
 %
 %Author::
 % - JunrZhou
-function pointsPath = generatePathFromClusters(clusters, v, f, n, gap, method)
+function [pointsPath, pointsPathIdx] = generatePathFromClusters(clusters, v, f, n, gap, method)
 if nargin < 6
     method = 0;
 end
@@ -38,10 +38,12 @@ clusterOrder = myPrim(endPoints);
 
 % generate path
 pointsPath = zeros(totalPointsNum, 3);
+pointsPathIdx = zeros(totalPointsNum, 1)
 tmpCount = 0;
 for i=1:cluster_num
     tmp = pathInfoCell{i, 5};
     pointsPath((tmpCount+1):(tmpCount+tmp), :) = pathInfoCell{i, 1};
+    pointsPathIdx((tmpCount+1):(tmpCount+tmp)) = pathInfoCell{i, 2};
     tmpCount = tmpCount+tmp;
 end
 end
