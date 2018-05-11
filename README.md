@@ -26,12 +26,17 @@ clusters = divideIntoFaces(v, f ,n); % clusters have shape [1, #clusters]
 ```matlab
 // compile
 mex generatePointsCloud.cpp % -largeArrayDims % This make mxSize size_t
+mex myTraverser.cpp
 path = generatePath(clusters, v, f, n);
 ```
 The function generatePath will run following code:
 ```matlab
-
+generatePathFromClusters
 ```
+which use graph traverse algorithm, see myTraverser.cpp for detail.
+
+#### Points Cloud generator
+see `generatePointsCloud.cpp`
 
 ## 4. Planning: get the pose along the path
 ### 4.1 Add pose path
