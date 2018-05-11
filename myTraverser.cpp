@@ -134,6 +134,7 @@ void mexFunction(int nlhs, mxArray* plhs[],
             break;
         }
     }
+    // mexPrintf("1: %f\n", orderedPointsCloudIdx[0]);
     
     /* Removal of repetition. */
     std::vector<double> vecPointsCloud;
@@ -202,25 +203,25 @@ void mySolverGreedy(const double* pointsCloud, const double* pointsCloudIdx,
     orderedPointsCloud[minIdx+length] = pointsCloud[minIdx+length];
     orderedPointsCloud[minIdx+2*length] = pointsCloud[minIdx+2*length];
     orderedPointsCloudIdx[minIdx] = pointsCloudIdx[minIdx];
+    visited[minIdx] = 1;
 
     double minVal = -1;
-    for(int i=0; i<length-1; i++) {
-        visited[minIdx] = 1;
-
-        double tmpDist[length - i - 1];
-        int tmpPointsIdx[length - i - 1];
+    for(int i=1; i<length; i++) {
+        double tmpDist[length - i];
+        int tmpPointsIdx[length - i];
         int tmpCount = 0;
         for (int j=0; j<length; j++) {
             if(visited[j] == 0) {
                 tmpDist[tmpCount] = distanceMatrix[minIdx+j*length];
                 tmpPointsIdx[tmpCount] = j;
-                if(tmpCount == (length-i-2))break;
+                if(tmpCount == (length-i-1))break;
                 tmpCount++;
             }
         }
 
         vecMin(tmpDist, length-i-1, minIdx, minVal);
         minIdx = tmpPointsIdx[minIdx];
+        visited[minIdx] = 1;
         // mexPrintf("%d: %d\n", i, minIdx);
 
         orderedPointsCloud[i] = pointsCloud[minIdx];

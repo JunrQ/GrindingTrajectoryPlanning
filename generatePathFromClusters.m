@@ -14,5 +14,7 @@ for cluIdx=1:cluster
     [pointsCloud, pointsCloudFaceIdx] = generatePointsCloud(clusters{cluIdx}, v, f, n, gap);
     % use graph traverse to reorder
     [orderedPointsCloud, orderedPointsCloudIdx] = myTraverser(pointsCloud, pointsCloudFaceIdx, method);
+
+    
 end
 end
