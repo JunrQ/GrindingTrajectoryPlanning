@@ -7,7 +7,7 @@
 
 function reordered = myPrim(lines)
 % chose a line randomly
-[m, n] = size(lines);
+[m, ~] = size(lines);
 reordered = zeros(m, 1);
 visited = zeros(m, 1);
 visited(1) = 1;
@@ -20,7 +20,7 @@ for i = 2:m
         if (abs(visited(j) - 1) < 1e-4)
             continue
         end
-        tmp_dist = norm(minIdx(j, 4:6) - lines(j, 1:3));
+        tmp_dist = norm(lines(j, 4:6) - lines(j, 1:3));
         if tmp_dist < minLength
             minIdx = j;
             minLength = tmp_dist;
