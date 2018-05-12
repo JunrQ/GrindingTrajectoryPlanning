@@ -10,7 +10,7 @@ if nargin < 6
     method = 0;
 end
 if nargin < 5
-    gap = 1.0;
+    gap = 0.5;
 end
 [~, cluster_num] = size(clusters);
 pathInfoCell = {};
@@ -38,7 +38,7 @@ clusterOrder = myPrim(endPoints);
 
 % generate path
 pointsPath = zeros(totalPointsNum, 3);
-pointsPathIdx = zeros(totalPointsNum, 1)
+pointsPathIdx = zeros(totalPointsNum, 1);
 tmpCount = 0;
 for i=1:cluster_num
     tmp = pathInfoCell{i, 5};
