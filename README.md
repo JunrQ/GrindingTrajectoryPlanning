@@ -36,14 +36,15 @@ The function generatePath will run following code:
 ```
 which use graph traverse algorithm, see myTraverser.cpp for detail.
 
+
+
 ## 4. Planning: get the pose along the path
 ### 4.1 Add pose path
 ```matlab
 addpath ./pose/
+add path ./traj/
 ```
-### 4.2 Complete path
-The whole path need not only points cloud on the surface of target, but also
-initial pose, ending pose. Those can be parameters.
-```matlab
-startQ = [0 0 0 0 0 0];
-```
+
+### 4.2 Get pose based on normal vectors
+
+
