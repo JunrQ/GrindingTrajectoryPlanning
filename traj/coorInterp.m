@@ -2,6 +2,9 @@
 %
 % y = coorInterp(x, times, method) generate times-1 more coordinates
 % between every two points in x;
+%
+%Author::
+% - JunrZhou
 
 function y = myInterp1(x, times, method)
 if nargin < 3

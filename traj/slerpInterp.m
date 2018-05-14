@@ -6,7 +6,7 @@
 % function will return [q1; q2].
 %
 %Author:
-% - ZhouJunr
+% - JunrZhou
 
 function qs = slerpInterp(q1, q2, length, shortest)
 qs = zeros(length, 4);
