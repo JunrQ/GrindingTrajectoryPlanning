@@ -8,7 +8,7 @@
 
 function y = coorInterp(x, times, method)
 if nargin < 3
-    method = 'spline';
+    method = 'linear';
 end
 [m, n] = size(x);
 x_ = 1:1/times:m;
