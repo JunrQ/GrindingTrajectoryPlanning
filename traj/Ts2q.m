@@ -42,12 +42,11 @@ for i=1:(pointsNum-1)
     end
 
     for j=1:tmpSteps
-        tmpQ = robot.ikine(tmpTs(i*4-3:i*4, :), 'q0', q0);
-        curQs(lastSteps+j, :) = tmpQ;
+        tmpQ = robot.ikine(tmpTs(j*4-3:j*4, :), 'q0', q0);
+        curQs(lastSteps+j-1, :) = tmpQ;
         q0 = tmpQ;
     end
-
-    lastSteps = lastSteps + tmpSteps + 1;
+    lastSteps = lastSteps + tmpSteps;
 
 end
 qs = curQs;
@@ -59,16 +58,30 @@ function [tmpTs, tmpSteps] = myTraj(T0, T1, stepLength, ending)
 if nargin < 4
     ending = false;
 end
-c1 = T0(1:3, 4);
-c2 = T1(1:3, 4);
+c1 = T0(1:3, 4)';
+c2 = T1(1:3, 4)';
+
+tmpLength = norm(c1 - c2);
+tmpSteps = floor(tmpLength * stepLength);
+
+if tmpSteps == 1
+    tmpTs = T0;
+    tmpSteps = 1;
+    return;
+end
+
+if ending
+    if tmpSteps == 2
+        tmpTs = [T0; T1];
+        tmpSteps = 2;
+        return;
+    end
+end
 
 rotateM1 = T0(1:3, 1:3);
 rotateM2 = T1(1:3, 1:3);
 UQ1 = rotm2quat(rotateM1);
 UQ2 = rotm2quat(rotateM2);
-
-tmpLength = norm(c1 - c2);
-tmpSteps = floor(tmpLength * stepLength);
 
 tmpCoorInterp = coorInterp([c1; c2], tmpSteps, 'linear');
 tmpUnitQuatInterp = slerpInterp(UQ1, UQ2, tmpSteps+1);
