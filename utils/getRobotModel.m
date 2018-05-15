@@ -19,7 +19,7 @@ L(3) = Link('revolute', 'd', 0, 'a', 20, 'alpha', -pi/2);
 L(4) = Link('revolute', 'd', 280, 'a',0, 'alpha', pi/2);
 L(5) = Link('revolute', 'd', 0, 'a', 0, 'alpha', -pi/2);
 L(6) = Link('revolute', 'd', 419.5, 'a', 0, 'alpha', 0);
-q0 = [0 pi/2 -pi/2 0 0 0];
+q0 = [0 pi/2 -pi/2 0 pi/2 0];
 robot = SerialLink(L, 'name', 'LR4-R560');
 
 %% Tool, base
