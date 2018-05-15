@@ -1,5 +1,8 @@
 # GrindingTrajectoryPlanning
 All the code should be run under matlab console.
+```matlab
+addpath ./utils/
+```
 
 ## 1. Get the target from \*.stl
 Run the following scripts, this will return v, f, n.
