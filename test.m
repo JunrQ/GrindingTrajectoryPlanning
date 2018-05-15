@@ -6,7 +6,9 @@ clusters = divideIntoFaces(v, f ,n);
 normalVecs = n(pointsPathIdx, :);
 Ts = connectPaths(pointsPath, normalVecs, clustersIdx);
 
-
+% inverse
+[myRobot, q0, speed_limit, qlimit] = getRobotModel();
+qs = Ts2q(myRobot, q0, 5, Ts);
 
 toc
 % disp(['Running time: ',num2str(toc)]);

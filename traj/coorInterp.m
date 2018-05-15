@@ -6,7 +6,7 @@
 %Author::
 % - JunrZhou
 
-function y = myInterp1(x, times, method)
+function y = coorInterp(x, times, method)
 if nargin < 3
     method = 'spline';
 end

@@ -2,8 +2,7 @@
 %
 % qs = slerpInterp(q1, q2, length, shortest)
 %
-% **NOTE**: if q1, q2 are too close, length is useless, because this
-% function will return [q1; q2].
+% **NOTE**: if q1, q2 are too close, we just do linear interplation.
 %
 %Author:
 % - JunrZhou
@@ -26,10 +25,10 @@ theta = acos(cosTheta);
 r = linspace(0, 1, length);
 if cosTheta > 1 - 1e-6
     % if too close, just linear interpolate
-    qs = [q1; q2];
+    qs = coorInterp([q1; q2], length-1, 'linear');
 else
     for i=1:length
-        qs(i) = (sin((1-r(i))*theta) * q1 + sin(r(i)*theta) * q2) / sin(theta);
+        qs(i, :) = (sin((1-r(i))*theta) * q1 + sin(r(i)*theta) * q2) / sin(theta);
     end
 end
 end
