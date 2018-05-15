@@ -2,6 +2,8 @@
 All the code should be run under matlab console.
 ```matlab
 addpath ./utils/
+mex generatePointsCloud.cpp % -largeArrayDims % This make mxSize size_t
+mex myTraverser.cpp
 ```
 
 ## 1. Get the target from \*.stl
@@ -27,9 +29,6 @@ clusters = divideIntoFaces(v, f ,n); % clusters have shape [1, #clusters]
 
 ### 3.2 For each face cluster generate path
 ```matlab
-% compile
-mex generatePointsCloud.cpp % -largeArrayDims % This make mxSize size_t
-mex myTraverser.cpp
 [pointsPath, pointsPathIdx] = generatePathFromClusters(clusters, v, f, n, 0.5, 0);
 ```
 The function generatePath will run following code:
