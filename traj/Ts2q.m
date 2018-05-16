@@ -10,12 +10,20 @@
 %
 %Author::
 % - JunrZhou
-function qs = Ts2q(robot, initQ, stepLength, Ts, connectInfo)
+function qs = Ts2q(robot, initQ, stepLength, Ts, connectInfo, fastStart)
+if nargin < 6
+    fastStart = false;
+end
 % from start to Ts(1)
 q0 = initQ;
 initT = robot.fkine(initQ);
 initT = double(initT); % transfer to double array
-[startTs, startSteps] = myTraj(initT, Ts(1:4, :), stepLength, true);
+if fastStart
+    [startTs, startSteps] = myTraj(initT, Ts(1:4, :), stepLength / 8, true);
+else
+    [startTs, startSteps] = myTraj(initT, Ts(1:4, :), stepLength, true);
+end
+
 
 curQs = zeros(startSteps, 7);
 curQs(1, 1:6) = q0;
