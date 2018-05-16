@@ -34,12 +34,12 @@ end
 outVec(lastIdx:m, :) = inputVec(lastIdx:m, :);
 outVec = -outVec;
 
-% for i = 1:m
-%     if outVec(i, 3) > 0
-%         outVec(i, 1:2) = outVec(i, 1:2) * 2;
-%     else
-%         outVec(i, 1:2) = outVec(i, 1:2) / 4;
-%     end
-%     outVec(i, :) = outVec(i, :) / norm(outVec(i, :));
-% end
+for i = 1:m
+    if outVec(i, 3) > 0
+        outVec(i, 1:2) = outVec(i, 1:2) * 3;
+    else
+        outVec(i, 1:2) = outVec(i, 1:2) / 6;
+    end
+    outVec(i, :) = outVec(i, :) / norm(outVec(i, :));
+end
 end
