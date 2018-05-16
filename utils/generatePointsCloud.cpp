@@ -149,7 +149,7 @@ void _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCl
     int thirdPointIdx = 9 - peakPointIdx0 - peakPointIdx1;
 
     /* Cut apart the longest line. */
-    int fragmentNum = (int)((maxVal + gap - gap/10000) / gap); // similar to floor
+    int fragmentNum = (int)((maxVal + gap - gap/10000) / gap); // similar to ceil
 
     double peakPointX = threeFacePoints[peakPointIdx0];
     double peakPointY = threeFacePoints[peakPointIdx0 + 1];

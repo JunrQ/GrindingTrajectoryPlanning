@@ -1,4 +1,4 @@
-%CONNECTPATHS connect path clusters and start pose
+%CONNECTPATHS connect path of different clusters
 %
 % Ts = connectPaths(paths, normalVecs, clustersIdx)
 % connect path according to their normal vectors, cluster index, and

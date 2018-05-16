@@ -1,9 +1,9 @@
 # GrindingTrajectoryPlanning
 All the code should be run under matlab console.
 ```matlab
-addpath ./utils/
-mex generatePointsCloud.cpp % -largeArrayDims % This make mxSize size_t
-mex myTraverser.cpp
+addpath ./utils/ ./pose/ ./traj/ ./collision_detection/
+mex ./utils/generatePointsCloud.cpp % -largeArrayDims % This make mxSize size_t
+mex ./utils/myTraverser.cpp
 ```
 
 ## 1. Get the target from \*.stl

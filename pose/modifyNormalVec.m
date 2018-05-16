@@ -2,7 +2,8 @@
 %
 % vectors = modifyNoramVec(inputVec)
 %   1. make vector smooth
-%   2.
+%   % 2. make it points to z+ [REMOVED]
+%
 %Author::
 % - JunrZhou
 function outVec = modifyNormalVec(inputVec)
@@ -31,13 +32,14 @@ for i=1:m
 end
 
 outVec(lastIdx:m, :) = inputVec(lastIdx:m, :);
+outVec = -outVec;
 
-for i = 1:m
-    if outVec(i, 3) > 0
-        outVec(i, 1:2) = outVec(i, 1:2) / 8;
-    else
-        outVec(i, 1:2) = outVec(i, 1:2) * 4 ;
-    end
-    outVec(i, :) = outVec(i, :) / norm(outVec(i, :));
-end
+% for i = 1:m
+%     if outVec(i, 3) > 0
+%         outVec(i, 1:2) = outVec(i, 1:2) * 2;
+%     else
+%         outVec(i, 1:2) = outVec(i, 1:2) / 4;
+%     end
+%     outVec(i, :) = outVec(i, :) / norm(outVec(i, :));
+% end
 end

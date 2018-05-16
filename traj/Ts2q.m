@@ -14,7 +14,7 @@ function qs = Ts2q(robot, initQ, stepLength, Ts)
 % from start to Ts(1)
 q0 = initQ;
 initT = robot.fkine(initQ);
-initT = double(initT);
+initT = double(initT); % transfer to double array
 [startTs, startSteps] = myTraj(initT, Ts(1:4, :), stepLength, true);
 
 curQs = zeros(startSteps, 6);
@@ -49,7 +49,7 @@ for i=1:(pointsNum-1)
     lastSteps = lastSteps + tmpSteps;
 
 end
-qs = curQs;
+qs = curQs(1:lastSteps, :);
 end
 
 
@@ -62,7 +62,7 @@ c1 = T0(1:3, 4)';
 c2 = T1(1:3, 4)';
 
 tmpLength = norm(c1 - c2);
-tmpSteps = floor(tmpLength * stepLength);
+tmpSteps = ceil(tmpLength * stepLength);
 
 if tmpSteps == 1
     tmpTs = T0;
@@ -103,6 +103,6 @@ if nargin < 3
 end
 [m, n] = size(qi);
 length = m*ratio;
-qr = ones(length, n);
+qr = zeros(length, n);
 qr(1:m, :) = qi;
 end
