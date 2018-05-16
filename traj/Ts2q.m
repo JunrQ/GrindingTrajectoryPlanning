@@ -51,7 +51,7 @@ for i=1:(pointsNum-1)
     lastSteps = lastSteps + tmpSteps;
 
 end
-qs = curQs(1:lastSteps, :);
+qs = curQs(1:lastSteps-1, :);
 end
 
 
