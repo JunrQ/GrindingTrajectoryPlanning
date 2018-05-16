@@ -12,11 +12,12 @@
 %Author::
 % - JunrZhou
 
-function Ts = connectPaths(paths, normalVecs, clustersIdx)
+function [Ts, connectInfo] = connectPaths(paths, normalVecs, clustersIdx)
 [pathNum, ~] = size(paths);
 lastCluIdx = clustersIdx(1);
 % Ts0 for path in clusters
 Ts0 = zeros(4 * pathNum, 4);
+connectInfo0 = ones(pathNum, 1);
 % Ts1 for path between clusters
 Ts1 = [];
 Ts1PosIdx = [];
@@ -54,9 +55,11 @@ end
 tmpCount = 1;
 tmpCountTs0 = 1;
 Ts = zeros(4*(pathNum + Ts1TotalNum), 4);
+connectInfo = zeros(pathNum + Ts1TotalNum, 1);
 for i=1:Ts1Size
     tmpIdx = Ts1PosIdx(i, 1);
     Ts(tmpCount:(tmpCount+tmpIdx-tmpCountTs0), :) = Ts0(tmpCountTs0:tmpIdx, :);
+    connectInfo((tmpCount+3)/4:(tmpCount+tmpIdx-tmpCountTs0)/4) = connectInfo0((tmpCountTs0+3)/4:tmpIdx/4);
     tmpCount = tmpCount + (tmpIdx-tmpCountTs0+1);
     tmpCountTs0 = tmpIdx+1;
     if (abs(Ts1Num(i)) > 1e-5)
@@ -65,6 +68,7 @@ for i=1:Ts1Size
     end
 end
 Ts(tmpCount:4*(pathNum + Ts1TotalNum), :) = Ts0(tmpCountTs0:(4*pathNum), :);
+connectInfo((tmpCount+3)/4:(pathNum + Ts1TotalNum)) = connectInfo0((tmpCountTs0+3)/4:pathNum);
 end
 
 function T = normal2T(normalVector)

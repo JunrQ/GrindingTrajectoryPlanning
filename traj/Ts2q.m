@@ -10,18 +10,18 @@
 %
 %Author::
 % - JunrZhou
-function qs = Ts2q(robot, initQ, stepLength, Ts)
+function qs = Ts2q(robot, initQ, stepLength, Ts, connectInfo)
 % from start to Ts(1)
 q0 = initQ;
 initT = robot.fkine(initQ);
 initT = double(initT); % transfer to double array
 [startTs, startSteps] = myTraj(initT, Ts(1:4, :), stepLength, true);
 
-curQs = zeros(startSteps, 6);
-curQs(1, :) = q0;
+curQs = zeros(startSteps, 7);
+curQs(1, 1:6) = q0;
 for i=2:startSteps
     tmpQ = robot.ikine(startTs(i*4-3:i*4, :), 'q0', q0);
-    curQs(i, :) = tmpQ;
+    curQs(i, 1:6) = tmpQ;
     q0 = tmpQ;
 end
 
@@ -36,6 +36,7 @@ for i=1:(pointsNum-1)
     T1 = Ts(4*i-3:4*i, 1:4);
     T2 = Ts(4*i+1:4*i+4, 1:4);
     [tmpTs, tmpSteps] = myTraj(T1, T2, stepLength);
+    tmpConInfo = connectInfo(i+1);
 
     if ((lastSteps + tmpSteps) >= curLength)
         [curQs, curLength] = reallocQ(curQs, 2);
@@ -43,7 +44,8 @@ for i=1:(pointsNum-1)
 
     for j=1:tmpSteps
         tmpQ = robot.ikine(tmpTs(j*4-3:j*4, :), 'q0', q0);
-        curQs(lastSteps+j-1, :) = tmpQ;
+        curQs(lastSteps+j-1, 1:6) = tmpQ;
+        curQs(lastSteps+j-1, 7) = tmpConInfo;
         q0 = tmpQ;
     end
     lastSteps = lastSteps + tmpSteps;
