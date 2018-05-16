@@ -149,7 +149,7 @@ void _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCl
     int thirdPointIdx = 9 - peakPointIdx0 - peakPointIdx1;
 
     /* Cut apart the longest line. */
-    int fragmentNum = (int)((maxVal + gap - gap/100000) / gap); // similar to ceil
+    int fragmentNum = (int)((maxVal + gap - gap/10000) / gap); // similar to floor
 
     double peakPointX = threeFacePoints[peakPointIdx0];
     double peakPointY = threeFacePoints[peakPointIdx0 + 1];
@@ -157,6 +157,9 @@ void _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCl
     double peakDeltaX = (threeFacePoints[peakPointIdx1] - peakPointX) / maxVal * gap;
     double peakDeltaY = (threeFacePoints[peakPointIdx1 + 1] - peakPointY) / maxVal * gap;
     double peakDeltaZ = (threeFacePoints[peakPointIdx1 + 2] - peakPointZ) / maxVal * gap;
+
+    // mexPrintf("peak points:\n%f, %f, %f\n", 
+    //             peakPointX, peakPointY, peakPointZ);
 
     
     double thirdPointX = threeFacePoints[thirdPointIdx];
@@ -166,18 +169,22 @@ void _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCl
                                 threeFacePoints[peakPointIdx1],
                                 threeFacePoints[peakPointIdx1+1],
                                 threeFacePoints[peakPointIdx1+2]);
-    double thirdDeltaX = (threeFacePoints[peakPointIdx1] - thirdPointX) / thirdLength * gap;
-    double thirdDeltaY = (threeFacePoints[peakPointIdx1 + 1] - thirdPointY) / thirdLength * gap;
-    double thirdDeltaZ = (threeFacePoints[peakPointIdx1 + 2] - thirdPointZ) / thirdLength * gap;
+    double thirdGap = gap / maxVal * thirdLength;
+    double thirdDeltaX = (threeFacePoints[peakPointIdx1] - thirdPointX) / thirdLength * thirdGap;
+    double thirdDeltaY = (threeFacePoints[peakPointIdx1 + 1] - thirdPointY) / thirdLength * thirdGap;
+    double thirdDeltaZ = (threeFacePoints[peakPointIdx1 + 2] - thirdPointZ) / thirdLength * thirdGap;
 
-    for(int i=0; i<fragmentNum; i++) {
-        int startPointX = peakPointX + i * peakDeltaX;
-        int startPointY = peakPointY + i * peakDeltaY;
-        int startPointZ = peakPointZ + i * peakDeltaZ;
+    for(int i=0; i<fragmentNum-1; i++) {
+        double startPointX = peakPointX + i * peakDeltaX;
+        double startPointY = peakPointY + i * peakDeltaY;
+        double startPointZ = peakPointZ + i * peakDeltaZ;
 
-        int endPointX = thirdPointX + i * thirdDeltaX;
-        int endPointY = thirdPointY + i * thirdDeltaY;
-        int endPointZ = thirdPointZ + i * thirdDeltaZ;
+        double endPointX = thirdPointX + i * thirdDeltaX;
+        double endPointY = thirdPointY + i * thirdDeltaY;
+        double endPointZ = thirdPointZ + i * thirdDeltaZ;
+
+        // mexPrintf("start:\n%f, %f, %f\nend:\n%f, %f, %f\n", 
+        //         startPointX, startPointY, startPointZ, endPointX, endPointY, endPointZ);
 
         double tmpLength = _norm2(startPointX, startPointY, startPointZ,
                                   endPointX, endPointY, endPointZ);
@@ -186,9 +193,9 @@ void _faceToPoints(double *threeFacePoints, double gap, vector<double>& pointsCl
         double tmpDeltaY = (endPointY - startPointY) / tmpLength * gap;
         double tmpDeltaZ = (endPointZ - startPointZ) / tmpLength * gap;
 
-        double tmpPointsNum = (int)((tmpLength - gap + gap*99999/100000) / gap);
+        double tmpPointsNum = (int)((tmpLength + gap - gap/10000) / gap);
 
-        for(int j=1; j<tmpPointsNum; j++) {
+        for(int j=0; j<(tmpPointsNum-1); j++) {
             pointsCloud.push_back(startPointX + j*tmpDeltaX);
             pointsCloud.push_back(startPointY + j*tmpDeltaY);
             pointsCloud.push_back(startPointZ + j*tmpDeltaZ);
