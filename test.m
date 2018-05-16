@@ -1,6 +1,14 @@
+clc
+clear
 tic
+
+%% add pth
 addpath . ./utils/ ./pose/ ./traj/ ./collision_detection/
+
+%% read target model, stl
 [v, f, n] = readStlModel("/Users/junr/Documents/Works/graduation-project/code/planning/123.stl");
+
+%% clusters
 clusters = divideIntoFaces(v, f ,n);
 
 % DON'T DO THIS
@@ -21,14 +29,15 @@ clusters = divideIntoFaces(v, f ,n);
 % end
 %
 
+%% get path and normal vectors
 [pointsPath, pointsPathIdx, clustersIdx] = generatePathFromClusters(clusters, v, f, n, 0.5, 0);
 normalVecs = n(pointsPathIdx, :);
-
 normalVecsM = modifyNormalVec(normalVecs);
-% connect different clusters
+
+%% connect different clusters
 [Ts, conInfo] = connectPaths(pointsPath, normalVecsM, clustersIdx);
 
-% inverse
+%% get arm robot model and do inverse mech
 [myRobot, q0, speed_limit, qlimit] = getRobotModel();
 qs = Ts2q(myRobot, q0, 2, Ts, conInfo);
 array2txt(qs, '2018-5-16_t2');
