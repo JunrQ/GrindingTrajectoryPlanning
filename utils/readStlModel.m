@@ -9,7 +9,7 @@
 % - n, normals
 % **Note:** see stlRead for detail.
 
-function [v, f, n] = readStlModel(path, func, varargin)
+function [v, f, n] = readStlModel(path, func)
 assert(exist(path)>0, "ERROR: File %s don't exists", path);
 if nargin < 2
     func = @preprocessStlVFN;

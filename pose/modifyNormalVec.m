@@ -38,7 +38,7 @@ for i = 1:m
     if outVec(i, 3) > 0
         outVec(i, 1:2) = outVec(i, 1:2) * 3;
     else
-        outVec(i, 1:2) = outVec(i, 1:2) / 6;
+        outVec(i, 1:2) = outVec(i, 1:2) / 8;
     end
     outVec(i, :) = outVec(i, :) / norm(outVec(i, :));
 end

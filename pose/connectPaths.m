@@ -12,7 +12,10 @@
 %Author::
 % - JunrZhou
 
-function [Ts, connectInfo] = connectPaths(paths, normalVecs, clustersIdx)
+function [Ts, connectInfo] = connectPaths(paths, normalVecs, clustersIdx, detector)
+if nargin < 4
+    detector = 0;
+end
 [pathNum, ~] = size(paths);
 lastCluIdx = clustersIdx(1);
 % Ts0 for path in clusters
@@ -23,11 +26,11 @@ Ts1 = [];
 Ts1PosIdx = [];
 Ts1Num = [];
 Ts1TotalNum = 0;
+
 for i=1:pathNum
     tmpPath = paths(i, :);
-
     % TODO: Can do some modification for normal vector
-    %
+    % Upates: normal vectors modification has been done before this func connectPaths
     tmpNormalVec = normalVecs(i, :);
     tmpCluIdx = clustersIdx(i);
 
@@ -40,10 +43,18 @@ for i=1:pathNum
         Ts1PosIdx = [Ts1PosIdx; 4*i];
 
         % TODO: add additional path
+        % Updates 2018-5-17 21:04
         % 
-        tmpTs1Num = 0; % points number
-        Ts1Num = [Ts1Num; 4*tmpTs1Num];
-        Ts1TotalNum = Ts1TotalNum + 4*tmpTs1Num;
+        if detector
+            lastCoor = paths(i-1, :); % move from path(i-1, :) to path(i, :)
+            [tmpTs1Num, tmpPathPoints] = detector.traj(lastCoor, tmpPath, ...
+                                                       normalVecs(i-1, :), tmpNormalVec);
+        else
+            tmpTs1Num = 0; % points number
+            Ts1Num = [Ts1Num; 4*tmpTs1Num];
+            Ts1TotalNum = Ts1TotalNum + 4*tmpTs1Num;
+        end
+
     else
         Ts0((4*i-3):(4*i-1), 1:3) = normal2T(tmpNormalVec);
         Ts0((4*i-3):(4*i-1), 4) = tmpPath';

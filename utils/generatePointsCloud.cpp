@@ -24,10 +24,10 @@ void mexFunction(int nlhs, mxArray* plhs[],
                  int nrhs, const mxArray* prhs[]) {
     // input check
     if(nrhs != 5)
-        mexErrMsgIdAndTxt( "MATLAB:convec:invalidNumInputs",
+        mexErrMsgIdAndTxt( "MATLAB:generatePointsCloud:invalidNumInputs",
                 "Exactly four input (faces_idx, v, f, n, gap) required.");
     if(nlhs != 2)
-        mexErrMsgIdAndTxt( "MATLAB:convec:invalidNumOutputs",
+        mexErrMsgIdAndTxt( "MATLAB:generatePointsCloud:invalidNumOutputs",
                 "Exactly two (pointsCloud, pointsCloudFaceIdx) output required.");
     
     size_t m;
