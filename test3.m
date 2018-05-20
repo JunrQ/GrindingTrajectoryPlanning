@@ -31,7 +31,7 @@ detector = CollisionDetector(stlPath);
 %% get arm robot model and do inverse mech
 [myRobot, q0, speed_limit, qlimit] = getRobotModel();
 qs = Ts2q(myRobot, q0, 2, Ts, conInfo, true);
-array2txt(qs, '2018-5-20_t1');
+array2txt(qs, '2018-5-20_t2');
 
 % myRobot.plot(qs(:, 1:6))
 
