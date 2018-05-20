@@ -4,7 +4,7 @@
 %
 % **NOTE**: if q1, q2 are too close, we just do linear interplation.
 %
-%Author:
+%Author::
 % - JunrZhou
 
 function qs = slerpInterp(q1, q2, length, shortest)

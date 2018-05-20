@@ -14,7 +14,7 @@
 
 function [Ts, connectInfo] = connectPaths(paths, normalVecs, clustersIdx, detector)
 if nargin < 4
-    detector = 0;
+    detector = false;
 end
 [pathNum, ~] = size(paths);
 lastCluIdx = clustersIdx(1);
@@ -34,7 +34,7 @@ for i=1:pathNum
     tmpNormalVec = normalVecs(i, :);
     tmpCluIdx = clustersIdx(i);
 
-    if (abs(tmpCluIdx - lastCluIdx) < 1e-5)
+    if (abs(tmpCluIdx - lastCluIdx) > 1e-5)
         lastCluIdx = tmpCluIdx;
         % if different cluster, do some connection
         Ts0((4*i-3):(4*i-1), 1:3) = normal2T(tmpNormalVec);
@@ -45,15 +45,25 @@ for i=1:pathNum
         % TODO: add additional path
         % Updates 2018-5-17 21:04
         % 
-        if detector
+        if nargin == 4
             lastCoor = paths(i-1, :); % move from path(i-1, :) to path(i, :)
-            [tmpTs1Num, tmpPathPoints] = detector.traj(lastCoor, tmpPath, ...
-                                                       normalVecs(i-1, :), tmpNormalVec);
+            [tmpTs1Num, tmpPathPoints] = detector.traj1(lastCoor, tmpPath, ...
+                                                       normalVecs(i-1, :), tmpNormalVec,...
+                                                       2, paths, normalVecs);
+            tmp = zeros(4 * tmpTs1Num, 4);
+            tmpPathVecs = coorInterp([normalVecs(i-1, :); tmpNormalVec], tmpTs1Num);
+            for j=1:tmpTs1Num
+                tmp((4*j-3):(4*j-1), 1:3) = normal2T(tmpPathVecs(j, :));
+                tmp((4*j-3):(4*j-1), 4) = tmpPathPoints(j, :)';
+                tmp((4*j), 4) = 1;
+            end
+            Ts1 = [Ts1; tmp];
         else
             tmpTs1Num = 0; % points number
-            Ts1Num = [Ts1Num; 4*tmpTs1Num];
-            Ts1TotalNum = Ts1TotalNum + 4*tmpTs1Num;
+            
         end
+        Ts1Num = [Ts1Num; 4*tmpTs1Num];
+        Ts1TotalNum = Ts1TotalNum + 4*tmpTs1Num;
 
     else
         Ts0((4*i-3):(4*i-1), 1:3) = normal2T(tmpNormalVec);
@@ -74,12 +84,17 @@ for i=1:Ts1Size
     tmpCount = tmpCount + (tmpIdx-tmpCountTs0+1);
     tmpCountTs0 = tmpIdx+1;
     if (abs(Ts1Num(i)) > 1e-5)
-        Ts(tmpCount:(tmpCount + Ts1Num(i)), :) = Ts1(i, :);
-        tmpCount = tmpCount + Ts1Num(i) + 1;
+        if i == 1
+            tmpLast = 1;
+        else
+            tmpLast = Ts1Num(i-1)+1;
+        end
+        Ts(tmpCount:(tmpCount + Ts1Num(i) - 1), :) = Ts1(tmpLast:(tmpLast + Ts1Num(i) - 1), :);
+        tmpCount = tmpCount + Ts1Num(i);
     end
 end
-Ts(tmpCount:4*(pathNum + Ts1TotalNum), :) = Ts0(tmpCountTs0:(4*pathNum), :);
-connectInfo((tmpCount+3)/4:(pathNum + Ts1TotalNum)) = connectInfo0((tmpCountTs0+3)/4:pathNum);
+Ts(tmpCount:4*pathNum + Ts1TotalNum, :) = Ts0(tmpCountTs0:(4*pathNum), :);
+connectInfo((tmpCount+3)/4:(pathNum + Ts1TotalNum/4)) = connectInfo0((tmpCountTs0+3)/4:pathNum);
 end
 
 function T = normal2T(normalVector)

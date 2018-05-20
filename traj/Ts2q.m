@@ -62,8 +62,6 @@ end
 qs = curQs(1:lastSteps-1, :);
 end
 
-
-
 function [tmpTs, tmpSteps] = myTraj(T0, T1, stepLength, ending)
 if nargin < 4
     ending = false;

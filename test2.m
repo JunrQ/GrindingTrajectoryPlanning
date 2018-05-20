@@ -11,7 +11,8 @@ addpath . ./utils/ ./pose/ ./traj/ ./collision_detection/
 
 %% read target model, stl
 % [v, f, n] = readStlModel("/Users/junr/Documents/Works/graduation-project/code/planning/123.stl");
-[v, f, n] = readStlModel("/Users/junr/Documents/Works/graduation-project/code/face_traj/gongjian.stl");
+stlPath = "/Users/junr/Documents/Works/graduation-project/code/face_traj/gongjian.stl";
+[v, f, n] = readStlModel(stlPath);
 
 %% clusters
 clusters = divideIntoFaces(v, f ,n);
