@@ -19,7 +19,7 @@ end
 
 methods
     function [nums, points] = traj1(obj, lastP, curP, lastN, curN, l, ps, ns)
-    %TRAJ1 very simple
+    %TRAJ1 Very simple way.
     %
     %Params::
     % - lastP, start position, x, y, z

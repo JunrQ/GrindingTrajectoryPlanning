@@ -8,7 +8,7 @@
 
 function [v, target_face, target_normal] = preprocessStlVFN(v, f, n)
 %% move, translation
-v = v + [300, 0, 0];
+v = v + [-300, 0, 0];
 %% get the faces with y>120, get their area and normal
 % the stl file is saved as patch_x_y.bmp, and the target has y>120
 target_face_idx = [];

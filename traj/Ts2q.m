@@ -19,7 +19,7 @@ q0 = initQ;
 initT = robot.fkine(initQ);
 initT = double(initT); % transfer to double array
 if fastStart
-    [startTs, startSteps] = myTraj(initT, Ts(1:4, :), stepLength / 8, true);
+    [startTs, startSteps] = myTraj(initT, Ts(1:4, :), stepLength / 12, true);
 else
     [startTs, startSteps] = myTraj(initT, Ts(1:4, :), stepLength, true);
 end

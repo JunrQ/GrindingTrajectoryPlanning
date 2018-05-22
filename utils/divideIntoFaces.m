@@ -41,11 +41,11 @@ while 1
             for tmp_face_cluster_idx=1:length(clusters{tmp_cls})
                 tmp_face_idx = clusters{tmp_cls}(tmp_face_cluster_idx);
                 tmp_l = intersect(f(tmp_face_idx, :), f(j, :));
-                if length(tmp_l) == 2 % have one line in common, connected
+                if length(tmp_l) <= 2 % have one line in common, connected
                     n1 = n(tmp_face_idx, :);
                     n2 = n(j, :);
                     tmp_angle = norm2angle(n1, n2);
-                    if ( tmp_angle < 90 || abs(tmp_angle - 180) < 1e-3)
+                    if ( tmp_angle < 30 || abs(tmp_angle - 180) < 1e-3)
                         disjoint_set_array = elementsUnion(disjoint_set_array, i, j);
                         face_processed(j) = 1.0;
                         clusters{tmp_cls} = [clusters{tmp_cls}, j];

@@ -53,7 +53,7 @@ for i=1:pathNum
             
             [tmpTs1Num, tmpPathPoints] = detector.traj2(lastCoor, tmpPath, ...
                                                        normalVecs(i-1, :), tmpNormalVec,...
-                                                       4, 2, 0.1);
+                                                       5, 2, 0.1);
             tmp = zeros(4 * tmpTs1Num, 4);
             tmpPathVecs = coorInterp([normalVecs(i-1, :); tmpNormalVec], tmpTs1Num);
             for j=1:tmpTs1Num
@@ -79,7 +79,7 @@ end
 [Ts1Size, ~] = size(Ts1PosIdx);
 tmpCount = 1;
 tmpCountTs0 = 1;
-Ts = zeros(4*(pathNum + Ts1TotalNum), 4);
+Ts = zeros((4*pathNum + Ts1TotalNum), 4);
 connectInfo = zeros(pathNum + Ts1TotalNum, 1);
 for i=1:Ts1Size
     tmpIdx = Ts1PosIdx(i, 1);
