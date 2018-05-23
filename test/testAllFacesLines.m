@@ -9,7 +9,7 @@ normalVecsM = modifyNormalVec(normalVecs);
 
 [tmpL, ~] = size(pointsPath);
 figure
-for i=1:1000
+for i=1:tmpL
     plot3(pointsPath(:, 1), pointsPath(:, 2), pointsPath(:, 3),...
           'r');
     hold on

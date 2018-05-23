@@ -5,7 +5,7 @@ clusters = divideIntoFaces(v, f ,n);
 
 figure
 [~, m] = size(clusters);
-for i=2:2
+for i=1:m
     tmpPoints = pointsPath(clustersIdx==i, :);
 
     scatter3(tmpPoints(:, 1), tmpPoints(:, 2), tmpPoints(:, 3), 1, [rand(), rand(), rand()]);
