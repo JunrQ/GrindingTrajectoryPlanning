@@ -19,7 +19,7 @@ clusters = divideIntoFaces(v, f ,n);
 %% get path and normal vectors
 [pointsPath, pointsPathIdx, clustersIdx] = generatePathFromClusters(clusters, v, f, n, 1, 0);
 normalVecs = n(pointsPathIdx, :);
-normalVecsM = modifyNormalVec(normalVecs, 20);
+normalVecsM = modifyNormalVec(normalVecs, 50);
 %% after modify normal vectors, all the normal vectors points to inside
 % and closer to z-
 % so we will use normalVecs as original vectors, which points to outside.
@@ -27,12 +27,14 @@ normalVecsM = modifyNormalVec(normalVecs, 20);
 %% connect different clusters
 detector = CollisionDetector(stlPath);
 % [Ts, conInfo] = connectPaths(pointsPath, normalVecsM, clustersIdx, detector);
-[Ts, conInfo] = connectPaths(pointsPath, normalVecsM, clustersIdx);
+[Ts, conInfo] = connectPaths(pointsPath, normalVecsM, clustersIdx, detector);
 
 %% get arm robot model and do inverse mech
 [myRobot, q0, speed_limit, qlimit] = getRobotModel();
 qs = Ts2q(myRobot, q0, 2, Ts, conInfo, true);
-array2txt(qs, '2018-5-23_t1');
+qs(:, 6) = 0;
+% qsM = modifyQ(qs, 1);
+array2txt(qsM, '2018-5-23_t2');
 
 % myRobot.plot(qs(:, 1:6))
 

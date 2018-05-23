@@ -69,6 +69,11 @@ end
 c1 = T0(1:3, 4)';
 c2 = T1(1:3, 4)';
 
+rotateM1 = T0(1:3, 1:3);
+rotateM2 = T1(1:3, 1:3);
+UQ1 = rotm2quat(rotateM1);
+UQ2 = rotm2quat(rotateM2);
+
 tmpLength = norm(c1 - c2);
 tmpSteps = ceil(tmpLength * stepLength);
 
@@ -85,11 +90,6 @@ if ending
         return;
     end
 end
-
-rotateM1 = T0(1:3, 1:3);
-rotateM2 = T1(1:3, 1:3);
-UQ1 = rotm2quat(rotateM1);
-UQ2 = rotm2quat(rotateM2);
 
 tmpCoorInterp = coorInterp([c1; c2], tmpSteps, 'linear');
 tmpUnitQuatInterp = slerpInterp(UQ1, UQ2, tmpSteps+1);

@@ -28,10 +28,10 @@ for i=1:m
         if (abs(tmpLength - 1) > 1e-5)
             if (tmpLength < length)
                 tmpVec = coorInterp([lastVec; curVec], tmpLength);
-                outVec((i-tmpLength-1):(i-1), :) = tmpVec(1:tmpLength+1, :);
+                outVec((i-tmpLength):(i-1), :) = tmpVec(1:tmpLength, :);
             else
                 tmpVec = coorInterp([lastVec; curVec], length);
-                outVec((i-length-1):(i-1), :) = tmpVec(1:length+1, :);
+                outVec((i-length):(i-1), :) = tmpVec(1:length, :);
             end
         end
         lastVec = curVec;
