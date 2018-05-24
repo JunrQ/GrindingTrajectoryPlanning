@@ -8,7 +8,10 @@ function qM = modifyQ(q, minDiffQ)
 lastIdx = 1;
 qM = [];
 for i = 2:m
-    if any((q(i, 1:6) - q(i-1, 1:6)) > minDiffQ)
+    if any(abs(q(i, 1:6) - q(i-1, 1:6)) > minDiffQ)
+        if any(abs(q(i, 1:6)) > 2.9)
+            continue;
+        end
         stepLength = floor(max(q(i, 1:6) - q(i-1, 1:6)) / minDiffQ);
         tmpQ = zeros(stepLength, n);
         tmpQ(:, 1:6) = coorInterp([q(i-1, 1:6); q(i, 1:6)], stepLength-1);
@@ -18,4 +21,6 @@ for i = 2:m
     end
 end
 qM = [qM; q(lastIdx:m, :)];
+
+
 end

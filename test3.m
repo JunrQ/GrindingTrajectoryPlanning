@@ -34,7 +34,7 @@ detector = CollisionDetector(stlPath);
 qs = Ts2q(myRobot, q0, 2, Ts, conInfo, true);
 qs(:, 6) = 0;
 % qsM = modifyQ(qs, 1);
-array2txt(qsM, '2018-5-23_t2');
+array2txt(qs, '2018-5-24_t1');
 
 % myRobot.plot(qs(:, 1:6))
 
