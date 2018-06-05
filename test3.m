@@ -6,7 +6,7 @@ clear
 tic
 
 %% add pth
-addpath . ./utils/ ./pose/ ./traj/ ./collision_detection/
+addpath . ./utils/ ./pose/ ./traj/ ./collision_detection/ ./guide/
 
 %% read target model, stl
 stlPath = "/Users/junr/Documents/Works/graduation-project/code/planning/123.stl";
@@ -34,7 +34,7 @@ detector = CollisionDetector(stlPath);
 qs = Ts2q(myRobot, q0, 2, Ts, conInfo, true);
 qs(:, 6) = 0;
 % qsM = modifyQ(qs, 1);
-array2txt(qs, '2018-5-24_t1');
+array2txt(qs, '2018-5-24_t3');
 
 % myRobot.plot(qs(:, 1:6))
 

@@ -22,7 +22,7 @@ function varargout = test(varargin)
 
 % Edit the above text to modify the response to help test
 
-% Last Modified by GUIDE v2.5 29-May-2018 21:22:06
+% Last Modified by GUIDE v2.5 29-May-2018 21:41:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -100,6 +100,8 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 
 
 
+
+
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -129,7 +131,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 [filname, pathname] = uigetfile('.stl', '待打磨文件路径');
 global stlPath;
-stlPath = [filname, pathname];
+stlPath = [pathname, filname];
 global robot;
 global q;
 [robot, q] = run(stlPath);
@@ -142,4 +144,16 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global robot;
 global q;
+axes(handles.axes1);
 robot.plot(q(:, 1:6));
+
+
+% --- Executes during object creation, after setting all properties.
+function axes1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+set(hObject,'xTick',[]);  
+set(hObject,'ytick',[]); 
+
+% Hint: place code in OpeningFcn to populate axes1
